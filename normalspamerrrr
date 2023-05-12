@@ -1,0 +1,87 @@
+
+import keyboard
+import time
+from urllib.parse import urlparse
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+print('Привет! Это специальная программа для сайта клавогонки.ру! \n Данная программа нужна для рассылки важных сообщений от лиц организаторов!\nВыберите тип поиска игроков: id или nickname, global_chat\nЕсли вы выбрали nickname это вам только поможет найти подходящего игрока.\n Также есть команда /forum, чтобы разместить свой турнир\конкурс на форуме.')
+a = str(input(''))
+if a == 'global_chat':
+    textrassilka = input('Введите текст рассылки!')
+    driver = webdriver.Chrome(executable_path="C:\chromedriver.exe")
+    driver.implicitly_wait(0.5)
+    urllogin = f'https://klavogonki.ru/login/'
+    driver.get(f"{urllogin}")
+    current_url = driver.current_url
+    while "/login" in driver.current_url:
+        time.sleep(1)
+    gamelist = "https://klavogonki.ru/gamelist/"
+    driver.get(f"{gamelist}")
+    hideorno = driver.find_element(By.CLASS_NAME, "mostright")
+    if hideorno.get_attribute("title") == 'Развернуть':
+            hideorno.click()
+    else:
+                    textwriteinput = driver.find_element(By.CLASS_NAME, "text")
+                    keyboard.write(f'{textrassilka}')
+if a == '/forum':
+    driver = webdriver.Chrome(executable_path="C:\chromedriver.exe")
+    driver.implicitly_wait(0.5)
+    urllogin = f'https://klavogonki.ru/login/'
+    driver.get(f"{urllogin}")
+if a == 'nickname':
+    nicknames = input('Введите ники через пробел: ')
+    nicknames_list = nicknames.split()  # разбиваем строку на список, используя пробел как разделитель
+    driver = webdriver.Chrome(executable_path="C:\chromedriver.exe")
+    driver.implicitly_wait(0.5)
+    urllogin = f'https://klavogonki.ru/login/'
+    driver.get(f"{urllogin}")
+    while "/login" in driver.current_url:
+        time.sleep(1)
+    print('Напишите ваш организаторский ID. Узнать свой ид можно в сводке аккаунта.')
+    org_id = input('')
+    driver.get(f"https://klavogonki.ru/u/#/{org_id}/friends/list/")
+    time.sleep(2)
+    inputtexts = driver.find_element(By.CLASS_NAME, "form-group")
+    inputtext = inputtexts.find_element(By.XPATH, '//*[@placeholder="Поиск людей"]')
+    for nickname in nicknames_list:
+        inputtext.send_keys(f'{nickname}')
+        time.sleep(1)
+        keyboard.press('enter')
+        time.sleep(1)
+        print('Как только вам нужен будет следующий ник, напишите 1')
+        wwiwiwiwi = input("")
+        if wwiwiwiwi != "1":
+            time.sleep(10000)
+        elif wwiwiwiwi == '1':
+                time.sleep(2)
+                inputkk = driver.find_element(By.CLASS_NAME, "form-group")
+                inputk = inputkk.find_element(By.XPATH, '//*[@placeholder="Поиск людей"]')
+                time.sleep(2)
+                inputk.clear()
+                continue
+if a == 'id':
+    numbers = input("Введите цифры через пробел: ")  # принимаем ввод от пользователя
+    numbers_list = numbers.split()  # разбиваем строку на список, используя пробел как разделитель
+    driver = webdriver.Chrome(executable_path="C:\chromedriver.exe")
+    driver.implicitly_wait(0.5)
+    urllogin = f'https://klavogonki.ru/login/'
+    driver.get(f'{urllogin}')
+    while "/login" in driver.current_url:
+        time.sleep(1)
+    print('Напишите ваш организаторский ID. Узнать свой ид можно в сводке аккаунта.')
+    id = input('')
+    print('Напишите текст рассылки.')
+    text = str(input(''))
+    for number in numbers_list:
+            url = f"http://klavogonki.ru/u/#/{id}/messages/{number}/"
+            driver.get(f"{url}")
+            time.sleep(3)
+            keyboard.write(f"{text}")
+            time.sleep(3)
+            keyboard.press("ctrl")
+            keyboard.press('enter')
+            keyboard.release('ctrl')
+            keyboard.release('enter')
+            time.sleep(3)
+print('РАССЫЛКА ОКОНЧЕНА! ')
+print('soft by pythonmann')
